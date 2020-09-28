@@ -1,3 +1,33 @@
+## Description
+Some services to run on a cron and track network
+perf over time
+
+## Deployment
+```
+rsync --filter=':- .gitignore' $PWD/ some-host:/opt/houseboat/ -r --delete
+
+# execute the rest of this on the target host
+ssh some-host
+cd /opt/houseboat
+docker-compose -f docker/docker-compose.yml build collector 
+docker-compse up -d
+```
+
+Create a script to wrap the collector runs with some logs
+```
+#!/usr/bin/env bash
+
+echo "$(date): Running collector" >> ./collector.log
+/usr/local/bin/docker-compose -f /opt/houseboat/docker/docker-compose.yml up collector
+echo "$(date): Done running collector" >> ./collector.log
+```
+
+```
+# create a cronjob to run the collector at some interval
+*/7 * * * * /root/run-collector.sh
+```
+
+## Appendix
 Example speedtest cli out json:
 ```json
 {
