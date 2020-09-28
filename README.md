@@ -1,6 +1,21 @@
 ## Description
-Some services to run on a cron and track network
-perf over time
+Some services to run on a cron and track basic network perf over time. 
+I'm convinced that comcast throttles me during the day but I don't have the data to back
+it up yet
+
+The setup is pretty basic, a python script pushes metrics to influxdb, and granfa 
+visualizes it
+
+![Dashboard image](./docs/images/dashboard.png)
+
+## Development
+```
+python3 -m venv ./env
+source ./env/bin/activate
+pip install -r requirements.txt
+cd src
+python3 main.py
+```
 
 ## Deployment
 ```
@@ -10,7 +25,7 @@ rsync --filter=':- .gitignore' $PWD/ some-host:/opt/houseboat/ -r --delete
 ssh some-host
 cd /opt/houseboat
 docker-compose -f docker/docker-compose.yml build collector 
-docker-compse up -d
+docker-compose up -d
 ```
 
 Create a script to wrap the collector runs with some logs
@@ -32,15 +47,15 @@ Example speedtest cli out json:
 ```json
 {
     "type":"result",
-    "timestamp":"2020-09-28T01:17:20Z",
+    "timestamp":"2010-09-28T01:17:20Z",
     "ping": {
         "jitter": 5.5609999999999999,
-        "latency":18.079999999999998
+        "latency": 18.079999999999998
     },
     "download": {
-        "bandwidth":5429538,
-        "bytes":64531544,
-        "elapsed":13517
+        "bandwidth": 5429538,
+        "bytes": 64531544,
+        "elapsed": 13517
     },
     "upload": {
         "bandwidth": 625648,
@@ -48,26 +63,26 @@ Example speedtest cli out json:
         "elapsed": 12316
     },
     "packetLoss":0,
-    "isp":"Comcast Cable",
+    "isp":"ISP",
     "interface": {
-        "internalIp": "172.17.0.2",
+        "internalIp": "10.10.10.10",
         "name":"eth0",
-        "macAddr":"02:42:AC:11:00:02",
+        "macAddr":"00:00:00:00:00:00",
         "isVpn":false,
-        "externalIp":"71.232.61.49"
+        "externalIp":"8.8.8.8"
     },
     "server":{
-        "id": 35437,
-        "name": "Acella Construction",
-        "location": "Pembroke, MA",
-        "country": "United States",
+        "id": 1,
+        "name": "Foo Bar",
+        "location": "Foo, BA",
+        "country": "Discworld",
         "host":"sp1.acel.la",
-        "port":8080,
-        "ip":"96.230.79.118"
+        "port": 443,
+        "ip":"8.8.8.8"
     },
     "result": {
-        "id":"c9e5fe54-08d1-4ae4-b79a-e7d07434589d",
-        "url":"https://www.speedtest.net/result/c/c9e5fe54-08d1-4ae4-b79a-e7d07434589d"
+        "id":"id",
+        "url":"https://www.speedtest.net/result/c/id"
     }
 }
 ```
